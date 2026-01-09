@@ -175,15 +175,15 @@ Mock JSON renders safely.
 
 ## 🟦 DAY 7 — Behavior Tracking (Frontend)
 
-- [ ] Create `useBehaviorTracking.ts`
-- [ ] Track:
+- [x] Create `useBehaviorTracking.ts`
+- [x] Track:
 
   - click intervals
   - retry count
   - hesitation time
   - device type
 
-- [ ] POST signals to `/api/analyze`
+- [x] POST signals to `/api/analyze`
 
 🚫 No emotion detection
 
@@ -207,33 +207,33 @@ Gemini returns structured JSON only.
 ---
 
 ## 🟧 DAY 9 — Gemini Output Validation
-
-- [ ] Define UI JSON schema
-- [ ] Validate Gemini output
-- [ ] Reject invalid responses
-- [ ] Add logging for failures
-
-✅ **Exit condition:**
-Invalid AI output never reaches frontend.
+ 
+ - [x] Define UI JSON schema
+ - [x] Validate Gemini output
+ - [x] Reject invalid responses
+ - [x] Add logging for failures
+ 
+ ✅ **Exit condition:**
+ Invalid AI output never reaches frontend.
 
 ---
 
 ## 🟧 DAY 10 — Connect Gemini to `/generate`
-
-- [ ] `/generate` flow:
-
-  - manifest
-  - vibe contract
-  - device
-  - Gemini
-
-- [ ] Return validated JSON
-
-🚫 No JSX
-🚫 No CSS
-
-✅ **Exit condition:**
-AI-generated UI renders correctly.
+ 
+ - [x] `/generate` flow:
+ 
+   - manifest
+   - vibe contract
+   - device
+   - Gemini
+ 
+ - [x] Return validated JSON
+ 
+ 🚫 No JSX
+ 🚫 No CSS
+ 
+ ✅ **Exit condition:**
+ AI-generated UI renders correctly.
 
 ---
 

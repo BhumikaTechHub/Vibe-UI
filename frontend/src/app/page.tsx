@@ -1,6 +1,9 @@
+"use client";
+
 // Demo Imports
 import { DynamicRenderer } from "../components/DynamicRenderer";
 import { UIComponent } from "../types/uiSchema";
+import { useBehaviorTracking } from "../hooks/useBehaviorTracking";
 
 const mockUISchema: UIComponent = {
   type: "container",
@@ -26,6 +29,8 @@ const mockUISchema: UIComponent = {
 };
 
 export default function Home() {
+  useBehaviorTracking('demo-home');
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-8 gap-12 bg-background relative overflow-hidden">
       {/* Background Gradient */}
@@ -35,11 +40,11 @@ export default function Home() {
       </div>
 
       <main className="max-w-4xl w-full flex flex-col items-center text-center gap-6 z-10">
-        
+
         {/* --- DEMO SECTION START --- */}
         <section className="w-full max-w-2xl mb-12 animate-in fade-in slide-in-from-bottom-8 duration-700">
-           <div className="text-xs font-mono text-muted-foreground mb-4 uppercase tracking-widest">Safe Renderer Output</div>
-           <DynamicRenderer component={mockUISchema} />
+          <div className="text-xs font-mono text-muted-foreground mb-4 uppercase tracking-widest">Safe Renderer Output</div>
+          <DynamicRenderer component={mockUISchema} />
         </section>
         {/* --- DEMO SECTION END --- */}
 
