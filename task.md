@@ -194,10 +194,10 @@ Mock JSON renders safely.
 
 ## 🟧 DAY 8 — Gemini 3 Integration (Isolated)
 
-- [ ] Create `backend/src/services/gemini.ts`
-- [ ] Add Gemini API key to `.env`
-- [ ] Write **strict system prompt**
-- [ ] Test Gemini with static input
+- [x] Create `backend/src/services/gemini.ts`
+- [x] Add Gemini API key to `.env`
+- [x] Write **strict system prompt**
+- [x] Test Gemini with static input
 
 🚫 No frontend connection
 
@@ -207,46 +207,46 @@ Gemini returns structured JSON only.
 ---
 
 ## 🟧 DAY 9 — Gemini Output Validation
- 
- - [x] Define UI JSON schema
- - [x] Validate Gemini output
- - [x] Reject invalid responses
- - [x] Add logging for failures
- 
- ✅ **Exit condition:**
- Invalid AI output never reaches frontend.
+
+- [x] Define UI JSON schema
+- [x] Validate Gemini output
+- [x] Reject invalid responses
+- [x] Add logging for failures
+
+✅ **Exit condition:**
+Invalid AI output never reaches frontend.
 
 ---
 
 ## 🟧 DAY 10 — Connect Gemini to `/generate`
- 
- - [x] `/generate` flow:
- 
-   - manifest
-   - vibe contract
-   - device
-   - Gemini
- 
- - [x] Return validated JSON
- 
- 🚫 No JSX
- 🚫 No CSS
- 
- ✅ **Exit condition:**
- AI-generated UI renders correctly.
+
+- [x] `/generate` flow:
+
+  - manifest
+  - vibe contract
+  - device
+  - Gemini
+
+- [x] Return validated JSON
+
+🚫 No JSX
+🚫 No CSS
+
+✅ **Exit condition:**
+AI-generated UI renders correctly.
 
 ---
 
 ## 🟧 DAY 11 — Caching Layer
 
-- [ ] Create `memoryCache.ts`
-- [ ] Cache key:
+- [x] Create `memoryCache.ts`
+- [x] Cache key:
 
   ```
   page + vibe + device + uiVersion
   ```
 
-- [ ] Cache-first logic
+- [x] Cache-first logic
 
 ✅ **Exit condition:**
 Repeat request skips Gemini.
@@ -255,19 +255,19 @@ Repeat request skips Gemini.
 
 ## 🟧 DAY 12 — Streaming Responses
 
-- [ ] Stream Gemini output from backend
-- [ ] Frontend renders skeleton first
-- [ ] Progressive hydration
+- [x] Tune Prompt for standard JSON (No Streaming)
+- [x] **Smart Skeleton** (Frontend Loading State)
+- [ ] Progressive hydration (Future)
 
 ✅ **Exit condition:**
-UI appears progressively, not blank.
+User sees "Loading..." instantly, then UI snaps in.
 
 ---
 
 ## 🟧 DAY 13 — Vibe Freeze Logic
 
-- [ ] Lock vibe during checkout
-- [ ] Prevent mid-flow switching
+- [x] Lock vibe during checkout
+- [x] Prevent mid-flow switching
 
 ✅ **Milestone 2:**
 **Stable, AI-powered adaptive UI**
@@ -276,8 +276,8 @@ UI appears progressively, not blank.
 
 ## 🟩 DAY 14 — Add Debug Panel
 
-- [ ] Create `DebugPanel.tsx`
-- [ ] Show:
+- [x] Create `DebugPanel.tsx`
+- [x] Show:
 
   - raw signals
   - inferred state
@@ -291,9 +291,9 @@ System behavior is explainable live.
 
 ## 🟩 DAY 15 — Add Second Page
 
-- [ ] Create new manifest (Dashboard/Form)
-- [ ] Reuse existing vibes
-- [ ] Confirm scalability
+- [x] Create new manifest (Dashboard/Form)
+- [x] Reuse existing vibes
+- [x] Confirm scalability
 
 ✅ **Exit condition:**
 System works beyond single page.

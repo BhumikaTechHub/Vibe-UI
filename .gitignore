@@ -45,3 +45,6 @@ Thumbs.db
 # Vibe-UI Specific
 brain/
 artifacts/
+.turbo/
+*.log
+

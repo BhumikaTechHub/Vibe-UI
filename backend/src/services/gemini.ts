@@ -10,7 +10,7 @@ if (!apiKey) {
 
 const genAI = new GoogleGenerativeAI(apiKey || 'MISSING_KEY');
 const model = genAI.getGenerativeModel({
-    model: "gemini-2.0-flash-exp", // Or gemini-1.5-flash if preferred for speed
+    model: "gemini-3-flash-preview",
     generationConfig: {
         responseMimeType: "application/json"
     }
@@ -24,7 +24,7 @@ export interface GeminiInput {
 
 
 
-export const generateUI = async (input: GeminiInput) => {
+export const generateUI = async (input: GeminiInput, retries = 3): Promise<any> => {
     if (!apiKey) {
         throw new Error("GEMINI_API_KEY is not set.");
     }
@@ -61,13 +61,20 @@ export const generateUI = async (input: GeminiInput) => {
         if (!validation.success) {
             console.error("❌ Gemini Output Validation Failed:", JSON.stringify(validation.error.format(), null, 2));
             console.error("Received:", JSON.stringify(json, null, 2));
-            throw new Error("Gemini output violated UI Schema constraints.");
+            throw new Error(`Gemini output violated UI Schema: ${JSON.stringify(validation.error.flatten().fieldErrors)}`);
         }
 
         console.log("✅ Gemini Output Validated Successfully");
         return validation.data;
 
-    } catch (error) {
+    } catch (error: any) {
+         // Retry Logic for Rate Limits (429) or Overloaded (503)
+         if ((error.status === 429 || error.status === 503) && retries > 0) {
+            console.warn(`⚠️ API Limited (Code ${error.status}). Retrying in 2 seconds... (${retries} attempts left)`);
+            await new Promise(res => setTimeout(res, 2000));
+            return generateUI(input, retries - 1);
+        }
+
         console.error("Gemini Generation Exception:", error);
         throw error;
     }

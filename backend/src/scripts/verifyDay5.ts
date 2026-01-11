@@ -21,7 +21,11 @@ async function verifyDay5() {
 
     // Test /api/generate
     try {
-        const generateRes = await axios.post(`${baseUrl}/api/generate`, { manifestId: 'checkout', userState: 'calm' });
+        const generateRes = await axios.post(`${baseUrl}/api/generate`, { 
+            manifest: { goal: 'checkout', requiredElements: [], constraints: {} }, 
+            vibe: 'calm_guided',
+            userState: 'calm'
+        });
         if (generateRes.status === 200 && generateRes.data.uiSchema) {
             console.log("✅ /api/generate is reachable and returns valid structure.");
         } else {

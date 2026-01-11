@@ -1,7 +1,10 @@
 "use client";
+import React from 'react';
 
 // Demo Imports
 import { DynamicRenderer } from "../components/DynamicRenderer";
+import { SkeletonLoader } from "../components/SkeletonLoader";
+import { DebugPanel } from "../components/DebugPanel";
 import { UIComponent } from "../types/uiSchema";
 import { useBehaviorTracking } from "../hooks/useBehaviorTracking";
 
@@ -29,11 +32,62 @@ const mockUISchema: UIComponent = {
 };
 
 export default function Home() {
-  useBehaviorTracking('demo-home');
+  const [uiSchema, setUiSchema] = React.useState<UIComponent | null>(null);
+  const [isLoading, setIsLoading] = React.useState(false);
+  const { metrics } = useBehaviorTracking('demo-home');
+
+  // Debug State
+  const [currentVibe, setCurrentVibe] = React.useState("calm_guided");
+  const [inferredState, setInferredState] = React.useState("unknown");
+  const [cacheStatus, setCacheStatus] = React.useState<'HIT' | 'MISS' | 'IDLE'>('IDLE');
+
+  const handleGenerate = async () => {
+    setIsLoading(true);
+    setUiSchema(null); // Reset to show skeleton
+    
+    const startTime = Date.now();
+
+    try {
+        const response = await fetch('http://localhost:3001/api/generate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                manifest: { goal: "checkout", requiredElements: [], constraints: {} },
+                vibe: currentVibe, // Pass current vibe for stickiness
+                userState: "demo_user", // In a real app, this comes from analysis
+                currentVibe // For Vibe Freeze logic
+            })
+        });
+        
+        const data = await response.json();
+        const duration = Date.now() - startTime;
+
+        if (data.uiSchema) {
+            setUiSchema(data.uiSchema);
+            if (data.vibe) setCurrentVibe(data.vibe);
+            if (data.userState) setInferredState(data.userState);
+            
+            // Heuristic for cache hit detection on client (fast < 50ms)
+            // Or ideally backend sends it. For demo, we trust speed.
+            setCacheStatus(duration < 50 ? 'HIT' : 'MISS');
+        }
+    } catch (e) {
+        console.error("Generation failed", e);
+    } finally {
+        setIsLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-8 gap-12 bg-background relative overflow-hidden">
       {/* Background Gradient */}
+      <DebugPanel 
+        metrics={metrics}
+        vibe={currentVibe}
+        userState={inferredState}
+        isLoading={isLoading}
+        lastCacheStatus={cacheStatus}
+      />
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
         <div className="absolute -top-[20%] -left-[10%] w-[50%] h-[50%] bg-accent/20 rounded-full blur-[120px]" />
         <div className="absolute bottom-[0%] right-[0%] w-[40%] h-[40%] bg-purple-500/10 rounded-full blur-[120px]" />
@@ -42,15 +96,32 @@ export default function Home() {
       <main className="max-w-4xl w-full flex flex-col items-center text-center gap-6 z-10">
 
         {/* --- DEMO SECTION START --- */}
-        <section className="w-full max-w-2xl mb-12 animate-in fade-in slide-in-from-bottom-8 duration-700">
-          <div className="text-xs font-mono text-muted-foreground mb-4 uppercase tracking-widest">Safe Renderer Output</div>
-          <DynamicRenderer component={mockUISchema} />
+        <section className="w-full max-w-2xl mb-12 animate-in fade-in slide-in-from-bottom-8 duration-700 min-h-[300px] border border-dashed border-border/50 rounded-xl p-8 flex flex-col items-center justify-center">
+          <div className="text-xs font-mono text-muted-foreground mb-4 uppercase tracking-widest">
+            {isLoading ? "Gemini 3 Reasoning..." : "Safe Renderer Output"}
+          </div>
+          
+          {isLoading ? (
+             <SkeletonLoader />
+          ) : uiSchema ? (
+             <DynamicRenderer component={uiSchema} />
+          ) : (
+             <div className="text-muted-foreground">
+                <p>Ready to generate.</p>
+                <button 
+                  onClick={handleGenerate}
+                  className="mt-4 px-6 py-2 bg-accent text-white rounded-full hover:bg-accent/90 transition-all shadow-lg shadow-accent/20"
+                >
+                    ✨ Generate UI
+                </button>
+             </div>
+          )}
         </section>
         {/* --- DEMO SECTION END --- */}
 
         <div className="inline-flex items-center justify-center px-4 py-1.5 rounded-full border border-border bg-card/50 backdrop-blur-sm shadow-sm transition-all hover:bg-card/80">
           <span className="w-2 h-2 rounded-full bg-emerald-500 mr-2 animate-pulse"></span>
-          <span className="text-sm font-medium text-muted-foreground">System Online · Day 6 Phase</span>
+          <span className="text-sm font-medium text-muted-foreground">System Online · Day 12 Phase</span>
         </div>
 
         <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-foreground">
